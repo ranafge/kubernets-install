@@ -21,5 +21,14 @@ This mean when pc resteart its see fstab which progrma should run but above comm
 
 To check the swap memory status run this command `sudo swapon --show `
 
+Then set hostname by command line or manually.
+command line:  
+
+    sudo hostnamectl set-hostname "your-expected-name-here"
+
+Then to verify run this command:  
+    
+    exec bash
+
 
 
