@@ -41,6 +41,43 @@ Check the status using ``` sudo systemctl status containerd``` command if not th
 Then create ```sudo mkdir /etc/containerd ``` in the all nodes.
 
 
+    containerd config default | sudo tee /etc/containerd/config.toml
+
+Create ```config.toml``` with the ``` containerd config default ``` settings in   ``` /etc/containerd/``` folder in the all nodes.
+
+Then restart
+
+    sudo systemctl restart containerd
+
+Then need to configure ``` /etc/containerd/config.toml```
+
+    [plugins."io.containerd.grpc.v1.cri".containerd.runtimes.runc.options]
+    SystemdCgroup = true
+Because K8s wants to use System Control group.
+
+After that edit ```sudo nano /etc/sysctl.conf``` for forward ip packet forward betweens k8s network.
+
+    sudo nano /etc/sysctl.conf
+    net.ipv4.ip_forward=1
 
 
+If the file is not exist then create the file.
 
+Create another file ```sudo nano /etc/modules-load.d/k8s.conf```
+and edit
+    
+    br_netfilter
+
+In Kubernetes, when pods communicate with each other or with the outside world, this module ***(br_netfilter)*** helps in forwarding the packets. After that reboot system using
+
+    sudo reboot
+
+
+The next step is the install he packages that are required for Kubernetes. First, we’ll add the required GPG key:
+
+    sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://
+    packages.cloud.google.com/apt/doc/apt-key.gpg
+
+After that, install the packages that are required for Kubernetes:
+
+    sudo apt install kubeadm kubectl kubelet
