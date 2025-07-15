@@ -30,5 +30,17 @@ Then to verify run this command:
     
     exec bash
 
+Install ```containerd``` in all node as well as master node using  
+ 
+     sudo apt isntall containerd
+Check the status using ``` sudo systemctl status containerd``` command if not then run these commands.
+
+    sudo systemctl enable containerd
+    sudo systemctl start containerd
+
+Then create ```sudo mkdir /etc/containerd ``` in the all nodes.
+
+
+
 
 
