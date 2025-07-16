@@ -1,6 +1,6 @@
 # kubernets-install
 Install kubernets
-Debian pc in master node and kali and two ubuntu **pc** **will** be worker node.  
+Debian 12 pc in master node and kali and two ubuntu **pc** **will** be worker node.  
     
     
     debian pc ip 192.168.1.5
@@ -75,9 +75,32 @@ In Kubernetes, when pods communicate with each other or with the outside world, 
 
 The next step is the install he packages that are required for Kubernetes. First, we’ll add the required GPG key:
 
-    sudo curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://
-    packages.cloud.google.com/apt/doc/apt-key.gpg
+   
+    echo "🔑 Step 3: Add Kubernetes GPG key..."
+    sudo curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.30/deb/Release.key | sudo gpg --dearmor -o /usr/share/keyrings/kubernetes-apt-keyring.gpg
 
-After that, install the packages that are required for Kubernetes:
+    echo "📦 Step 4: Add Kubernetes apt repository..."
+    echo "deb [signed-by=/usr/share/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.30/deb/ /" | sudo tee /etc/apt/sources.list.d/kubernetes.list > /dev/null
 
-    sudo apt install kubeadm kubectl kubelet
+    echo "🔄 Step 5: Update package index..."
+    sudo apt update
+
+    echo "⬇️ Step 6: Install kubelet, kubeadm, kubectl..."
+    sudo apt install -y kubelet kubeadm kubectl
+
+    echo "📌 Step 7: Hold packages to prevent unintended upgrades..."
+    sudo apt-mark hold kubelet kubeadm kubectl
+
+    echo "✅ Kubernetes tools installed:"
+    kubeadm version
+    kubectl version --client
+    kubelet --version
+
+
+After that run this comand 
+
+    sudo kubeadm init \
+    --control-plane-endpoint=192.168.11.105 \
+    --node-name=controller \
+    --pod-network-cidr=10.244.0.0/16
+
